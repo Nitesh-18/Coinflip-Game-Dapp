@@ -69,13 +69,15 @@ const CoinFlip = ({ userAccount }) => {
 
     try {
       const balance = await contract.getBalance();
-      if (parseEther(betAmount).gt(balance)) {
+      const betAmountInWei = parseEther(betAmount);
+
+      if (betAmountInWei > balance) {
         setError("Insufficient funds in the contract.");
         return;
       }
 
       const tx = await contract.flip(selectedSide === "heads", {
-        value: parseEther(betAmount),
+        value: betAmountInWei,
       });
       await tx.wait();
 
