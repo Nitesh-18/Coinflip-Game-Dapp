@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserProvider, Contract, parseEther, formatEther } from "ethers";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CoinFlip = ({ userAccount }) => {
   const [betAmount, setBetAmount] = useState("");
@@ -8,6 +10,7 @@ const CoinFlip = ({ userAccount }) => {
   const [contract, setContract] = useState(null);
   const [contractBalance, setContractBalance] = useState(null);
   const [error, setError] = useState("");
+  const [connectedAccount, setConnectedAccount] = useState(userAccount);
 
   const contractAddress = "0xe18BD0fEBf0341ee94fccD8d5E90286074370502";
   const contractABI = [
@@ -109,24 +112,41 @@ const CoinFlip = ({ userAccount }) => {
     }
   };
 
+  // Function to show toast notification
+  const notify = (account) => {
+    toast.success(`Wallet Connected: ${account}`, {
+      position: "top-right",
+      autoClose: 3000, // 3 seconds
+    });
+  };
+
+  // Trigger toast when wallet is connected
+  useEffect(() => {
+    if (connectedAccount) {
+      notify(connectedAccount);
+    }
+  }, [connectedAccount]);
+
+  // Handle the wallet connection from WalletConnect component
+  const handleWalletConnected = (account) => {
+    setConnectedAccount(account);
+  };
+
   return (
-    <div className="flex flex-col items-center mt-8 text-black">
-      <h2 className="text-4xl font-extrabold mb-4 animate-bounce">
-        Coin Flip Game
-      </h2>
-      <div className="w-16 h-16 mb-4">
+    <div className="flex flex-col items-center mt-8 text-white bg-gray-900 min-h-screen">
+      <h2 className="text-4xl font-bold mb-4 flex items-center">
+        <span className="mr-4">Coin Flip Game</span>
         <video
+          src="./assets/coin-flip.mp4"
+          className="w-32 h-32"
           autoPlay
           loop
           muted
-          className="w-full h-full object-cover rounded-full"
-        >
-          <source src="/Coin.mp4" type="video/mp4" />
-        </video>
-      </div>
+        ></video>
+      </h2>
 
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4 transition transform hover:scale-105"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
         onClick={initContract}
       >
         Initialize Contract
@@ -137,25 +157,25 @@ const CoinFlip = ({ userAccount }) => {
         placeholder="Enter bet amount (ETH)"
         value={betAmount}
         onChange={handleBetAmountChange}
-        className="border p-2 rounded mb-4 bg-gray-800 text-white"
+        className="border p-2 rounded mb-4 text-black"
       />
 
       <div className="flex justify-center mb-4">
         <button
-          className={`mr-4 p-2 rounded transition transform hover:scale-105 ${
+          className={`mr-4 p-2 rounded ${
             selectedSide === "heads"
               ? "bg-blue-500 text-white"
-              : "bg-gray-600 text-gray-200"
+              : "bg-gray-200 text-black"
           }`}
           onClick={() => handleSideChange("heads")}
         >
           Heads
         </button>
         <button
-          className={`p-2 rounded transition transform hover:scale-105 ${
+          className={`p-2 rounded ${
             selectedSide === "tails"
               ? "bg-blue-500 text-white"
-              : "bg-gray-600 text-gray-200"
+              : "bg-gray-200 text-black"
           }`}
           onClick={() => handleSideChange("tails")}
         >
@@ -165,7 +185,7 @@ const CoinFlip = ({ userAccount }) => {
 
       <button
         onClick={flipCoin}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition transform hover:scale-105"
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
       >
         Flip Coin
       </button>
@@ -184,7 +204,7 @@ const CoinFlip = ({ userAccount }) => {
 
       <button
         onClick={withdrawEarnings}
-        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-4 transition transform hover:scale-105"
+        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-4"
       >
         Withdraw Earnings
       </button>
@@ -195,6 +215,14 @@ const CoinFlip = ({ userAccount }) => {
           <span className="font-bold">{contractBalance} ETH</span>
         </p>
       )}
+
+      {connectedAccount && (
+        <p className="mt-4 text-lg bg-gray-800 text-white p-2 rounded">
+          Connected: <span className="font-bold">{connectedAccount}</span>
+        </p>
+      )}
+
+      <ToastContainer />
     </div>
   );
 };
