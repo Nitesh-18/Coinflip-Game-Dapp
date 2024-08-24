@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import { ethers } from "ethers";
 
 const WalletConnect = ({ onConnect }) => {
   const [account, setAccount] = useState(null);
@@ -23,10 +22,13 @@ const WalletConnect = ({ onConnect }) => {
   return (
     <div className="flex justify-center items-center h-screen">
       {account ? (
-        <p className="text-green-500">Connected: {account}</p>
+        <p className="text-green-500 bg-gray-800 p-2 rounded">
+          Connected: {account.substring(0, 6)}...
+          {account.substring(account.length - 4)}
+        </p>
       ) : (
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 text-white font-bold py-2 px-6 rounded-full transition-all duration-300 transform hover:scale-105"
           onClick={connectWallet}
         >
           Connect Wallet
