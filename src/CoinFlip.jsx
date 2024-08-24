@@ -68,8 +68,11 @@ const CoinFlip = ({ userAccount }) => {
     }
 
     try {
-      const balance = await contract.getBalance();
+      const balance = await contract.getBalance(); // Balance is in Wei
       const betAmountInWei = parseEther(betAmount);
+
+      console.log("Contract balance in ETH:", formatEther(balance));
+      console.log("Bet amount in Wei:", betAmountInWei.toString());
 
       if (betAmountInWei > balance) {
         setError("Insufficient funds in the contract.");
