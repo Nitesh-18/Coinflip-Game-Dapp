@@ -71,9 +71,6 @@ const CoinFlip = ({ userAccount }) => {
       const balance = await contract.getBalance(); // Balance is in Wei
       const betAmountInWei = parseEther(betAmount);
 
-      console.log("Contract balance in ETH:", formatEther(balance));
-      console.log("Bet amount in Wei:", betAmountInWei.toString());
-
       if (betAmountInWei > balance) {
         setError("Insufficient funds in the contract.");
         return;
@@ -111,10 +108,12 @@ const CoinFlip = ({ userAccount }) => {
 
   return (
     <div className="flex flex-col items-center mt-8">
-      <h2 className="text-2xl font-bold mb-4">Coin Flip Game</h2>
+      <h2 className="text-3xl font-extrabold mb-4 text-gradient bg-gradient-to-r from-green-400 to-blue-500">
+        Coin Flip Game
+      </h2>
 
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+        className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mb-4 transition-all duration-300 transform hover:scale-105"
         onClick={initContract}
       >
         Initialize Contract
@@ -131,16 +130,20 @@ const CoinFlip = ({ userAccount }) => {
       <div className="flex justify-center mb-4">
         <button
           className={`mr-4 p-2 rounded ${
-            selectedSide === "heads" ? "bg-blue-500 text-white" : "bg-gray-200"
-          }`}
+            selectedSide === "heads"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 hover:bg-blue-100"
+          } transition-all duration-300 transform hover:scale-105`}
           onClick={() => handleSideChange("heads")}
         >
           Heads
         </button>
         <button
           className={`p-2 rounded ${
-            selectedSide === "tails" ? "bg-blue-500 text-white" : "bg-gray-200"
-          }`}
+            selectedSide === "tails"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 hover:bg-blue-100"
+          } transition-all duration-300 transform hover:scale-105`}
           onClick={() => handleSideChange("tails")}
         >
           Tails
@@ -149,32 +152,36 @@ const CoinFlip = ({ userAccount }) => {
 
       <button
         onClick={flipCoin}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-all duration-300 transform hover:scale-105"
       >
         Flip Coin
       </button>
 
       {result && (
-        <p className="mt-4 text-xl">
-          Coin flip result: <span className="font-bold">{result}</span>!
+        <p className="mt-4 text-2xl font-semibold text-gray-700 transition-all duration-500">
+          Coin flip result:{" "}
+          <span className="font-bold text-gradient bg-gradient-to-r from-pink-500 to-yellow-500">
+            {result}
+          </span>
+          !
         </p>
       )}
 
       {error && (
         <p className="mt-4 text-xl text-red-500">
-          <span class="font-bold">{error}</span>
+          <span className="font-bold">{error}</span>
         </p>
       )}
 
       <button
         onClick={withdrawEarnings}
-        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-4"
+        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-4 transition-all duration-300 transform hover:scale-105"
       >
         Withdraw Earnings
       </button>
 
       {contractBalance !== null && (
-        <p className="mt-4 text-xl">
+        <p className="mt-4 text-xl text-gradient bg-gradient-to-r from-red-500 to-purple-500">
           Contract balance:{" "}
           <span className="font-bold">{contractBalance} ETH</span>
         </p>
