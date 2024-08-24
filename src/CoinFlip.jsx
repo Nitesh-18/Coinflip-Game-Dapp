@@ -110,11 +110,23 @@ const CoinFlip = ({ userAccount }) => {
   };
 
   return (
-    <div className="flex flex-col items-center mt-8 bg-gray-900 text-white min-h-screen transition-all">
-      <h2 className="text-3xl font-bold mb-6 animate-pulse">Coin Flip Game</h2>
+    <div className="flex flex-col items-center mt-8 text-black">
+      <h2 className="text-4xl font-extrabold mb-4 animate-bounce">
+        Coin Flip Game
+      </h2>
+      <div className="w-16 h-16 mb-4">
+        <video
+          autoPlay
+          loop
+          muted
+          className="w-full h-full object-cover rounded-full"
+        >
+          <source src="/Coin.mp4" type="video/mp4" />
+        </video>
+      </div>
 
       <button
-        className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out mb-6"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4 transition transform hover:scale-105"
         onClick={initContract}
       >
         Initialize Contract
@@ -125,25 +137,25 @@ const CoinFlip = ({ userAccount }) => {
         placeholder="Enter bet amount (ETH)"
         value={betAmount}
         onChange={handleBetAmountChange}
-        className="border p-3 rounded-lg mb-6 bg-gray-800 text-white shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-600"
+        className="border p-2 rounded mb-4 bg-gray-800 text-white"
       />
 
-      <div className="flex justify-center mb-6">
+      <div className="flex justify-center mb-4">
         <button
-          className={`mr-4 p-3 rounded-lg transform hover:scale-105 transition-transform duration-300 ease-in-out ${
+          className={`mr-4 p-2 rounded transition transform hover:scale-105 ${
             selectedSide === "heads"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-700 hover:bg-gray-800"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-600 text-gray-200"
           }`}
           onClick={() => handleSideChange("heads")}
         >
           Heads
         </button>
         <button
-          className={`p-3 rounded-lg transform hover:scale-105 transition-transform duration-300 ease-in-out ${
+          className={`p-2 rounded transition transform hover:scale-105 ${
             selectedSide === "tails"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-700 hover:bg-gray-800"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-600 text-gray-200"
           }`}
           onClick={() => handleSideChange("tails")}
         >
@@ -153,32 +165,34 @@ const CoinFlip = ({ userAccount }) => {
 
       <button
         onClick={flipCoin}
-        className="bg-green-600 hover:bg-green-800 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out"
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition transform hover:scale-105"
       >
         Flip Coin
       </button>
 
       {result && (
-        <p className="mt-6 text-2xl font-bold animate-bounce">
-          Coin flip result: <span>{result}</span>!
+        <p className="mt-4 text-xl">
+          Coin flip result: <span className="font-bold">{result}</span>!
         </p>
       )}
 
       {error && (
-        <p className="mt-6 text-xl text-red-500 animate-pulse">{error}</p>
+        <p className="mt-4 text-xl text-red-500">
+          <span className="font-bold">{error}</span>
+        </p>
       )}
 
       <button
         onClick={withdrawEarnings}
-        className="bg-yellow-600 hover:bg-yellow-800 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out mt-8"
+        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-4 transition transform hover:scale-105"
       >
         Withdraw Earnings
       </button>
 
       {contractBalance !== null && (
-        <p className="mt-6 text-xl font-semibold">
+        <p className="mt-4 text-xl">
           Contract balance:{" "}
-          <span className="text-yellow-400">{contractBalance} ETH</span>
+          <span className="font-bold">{contractBalance} ETH</span>
         </p>
       )}
     </div>
