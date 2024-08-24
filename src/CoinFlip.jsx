@@ -1,19 +1,29 @@
-import React, { useState } from "react";
-import { BrowserProvider } from "ethers";
-import { Contract, parseEther } from "ethers";
+import React, { useState, useEffect } from "react";
+import { parseEther } from "ethers";
+import { BrowserProvider, Contract } from "ethers";
 
 const CoinFlip = ({ userAccount }) => {
   const [betAmount, setBetAmount] = useState("");
   const [selectedSide, setSelectedSide] = useState("");
   const [result, setResult] = useState(null);
   const [contract, setContract] = useState(null);
+  const [contractBalance, setContractBalance] = useState(null);
+  const [insufficientFunds, setInsufficientFunds] = useState(false);
 
   // Replace with your deployed contract address
   const contractAddress = "0x6b55EBf625eF05Aa7a3746b8C7E6c7AFf11d9aEA";
   const contractABI = [
     "function flip(bool _guess) public payable",
     "function withdraw() public",
+    "function getResult() public view returns (bool flipResult, bool userGuess)",
+    "function getBalance() public view returns (uint256)",
   ];
+
+  useEffect(() => {
+    if (contract) {
+      fetchContractBalance();
+    }
+  }, [contract]);
 
   const initContract = async () => {
     if (window.ethereum) {
@@ -30,6 +40,16 @@ const CoinFlip = ({ userAccount }) => {
     }
   };
 
+  const fetchContractBalance = async () => {
+    try {
+      const balance = await contract.getBalance();
+      setContractBalance(parseFloat(balance) / 1e18); // Convert Wei to ETH
+      setInsufficientFunds(false);
+    } catch (error) {
+      console.error("Error fetching contract balance", error);
+    }
+  };
+
   const handleBetAmountChange = (e) => {
     setBetAmount(e.target.value);
   };
@@ -38,21 +58,63 @@ const CoinFlip = ({ userAccount }) => {
     setSelectedSide(side);
   };
 
+  const estimateGas = async () => {
+    try {
+      const estimatedGas = await contract.estimateGas.flip(
+        selectedSide === "heads",
+        {
+          value: parseEther(betAmount),
+        }
+      );
+      console.log("Estimated Gas:", estimatedGas.toString());
+      return estimatedGas;
+    } catch (error) {
+      console.error("Error estimating gas", error);
+    }
+  };
+
   const flipCoin = async () => {
     if (!contract) {
       alert("Contract not initialized!");
       return;
     }
 
+    // Check if contract balance is sufficient
+    if (contractBalance < parseFloat(betAmount)) {
+      setInsufficientFunds(true);
+      return;
+    }
+
     try {
+      const estimatedGas = await estimateGas();
       const tx = await contract.flip(selectedSide === "heads", {
         value: parseEther(betAmount),
+        gasLimit: estimatedGas.toNumber(),
       });
       await tx.wait();
-      // Update with real result if available from contract
-      setResult("Coin flip successful"); // You may need to get the actual result from the contract
+
+      // Retrieve the actual result from the contract
+      const [flipResult, userGuess] = await contract.getResult();
+      setResult(flipResult === userGuess ? "Heads" : "Tails");
     } catch (error) {
       console.error("Error flipping the coin", error);
+    }
+  };
+
+  const withdrawEarnings = async () => {
+    if (!contract) {
+      alert("Contract not initialized!");
+      return;
+    }
+
+    try {
+      const tx = await contract.withdraw();
+      await tx.wait();
+      alert("Withdrawal successful!");
+      fetchContractBalance(); // Refresh contract balance after withdrawal
+    } catch (error) {
+      console.error("Error withdrawing earnings", error);
+      alert("Withdrawal failed. Check the console for details.");
     }
   };
 
@@ -101,11 +163,24 @@ const CoinFlip = ({ userAccount }) => {
         Flip Coin
       </button>
 
+      {insufficientFunds && (
+        <p className="mt-4 text-xl text-red-500">
+          Insufficient funds in the contract. Please try again later.
+        </p>
+      )}
+
       {result && (
         <p className="mt-4 text-xl">
           Coin flip result: <span className="font-bold">{result}</span>!
         </p>
       )}
+
+      <button
+        onClick={withdrawEarnings}
+        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-4"
+      >
+        Withdraw Earnings
+      </button>
     </div>
   );
 };
