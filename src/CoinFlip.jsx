@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { parseEther } from "ethers";
-import { BrowserProvider, Contract } from "ethers";
+import React, { useState } from "react";
+import { BrowserProvider, Contract, parseEther, formatEther } from "ethers";
 
 const CoinFlip = ({ userAccount }) => {
   const [betAmount, setBetAmount] = useState("");
@@ -8,10 +7,9 @@ const CoinFlip = ({ userAccount }) => {
   const [result, setResult] = useState(null);
   const [contract, setContract] = useState(null);
   const [contractBalance, setContractBalance] = useState(null);
-  const [insufficientFunds, setInsufficientFunds] = useState(false);
+  const [error, setError] = useState("");
 
-  // Replace with your deployed contract address
-  const contractAddress = "0x6b55EBf625eF05Aa7a3746b8C7E6c7AFf11d9aEA";
+  const contractAddress = "0xe18BD0fEBf0341ee94fccD8d5E90286074370502";
   const contractABI = [
     "function flip(bool _guess) public payable",
     "function withdraw() public",
@@ -19,34 +17,39 @@ const CoinFlip = ({ userAccount }) => {
     "function getBalance() public view returns (uint256)",
   ];
 
-  useEffect(() => {
-    if (contract) {
-      fetchContractBalance();
-    }
-  }, [contract]);
-
   const initContract = async () => {
     if (window.ethereum) {
-      const provider = new BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contractInstance = new Contract(
-        contractAddress,
-        contractABI,
-        signer
-      );
-      setContract(contractInstance);
+      try {
+        const provider = new BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const contractInstance = new Contract(
+          contractAddress,
+          contractABI,
+          signer
+        );
+        setContract(contractInstance);
+        fetchContractBalance(contractInstance);
+      } catch (err) {
+        console.error("Error initializing contract", err);
+        setError(
+          "Failed to initialize contract. Check the console for details."
+        );
+      }
     } else {
       alert("Please install MetaMask!");
     }
   };
 
-  const fetchContractBalance = async () => {
+  const fetchContractBalance = async (contractInstance) => {
     try {
-      const balance = await contract.getBalance();
-      setContractBalance(parseFloat(balance) / 1e18); // Convert Wei to ETH
-      setInsufficientFunds(false);
-    } catch (error) {
-      console.error("Error fetching contract balance", error);
+      const balance = await contractInstance.getBalance();
+      setContractBalance(formatEther(balance));
+      setError("");
+    } catch (err) {
+      console.error("Error fetching contract balance", err);
+      setError(
+        "Failed to fetch contract balance. Check the console for details."
+      );
     }
   };
 
@@ -58,46 +61,30 @@ const CoinFlip = ({ userAccount }) => {
     setSelectedSide(side);
   };
 
-  const estimateGas = async () => {
-    try {
-      const estimatedGas = await contract.estimateGas.flip(
-        selectedSide === "heads",
-        {
-          value: parseEther(betAmount),
-        }
-      );
-      console.log("Estimated Gas:", estimatedGas.toString());
-      return estimatedGas;
-    } catch (error) {
-      console.error("Error estimating gas", error);
-    }
-  };
-
   const flipCoin = async () => {
     if (!contract) {
       alert("Contract not initialized!");
       return;
     }
 
-    // Check if contract balance is sufficient
-    if (contractBalance < parseFloat(betAmount)) {
-      setInsufficientFunds(true);
-      return;
-    }
-
     try {
-      const estimatedGas = await estimateGas();
+      const balance = await contract.getBalance();
+      if (parseEther(betAmount).gt(balance)) {
+        setError("Insufficient funds in the contract.");
+        return;
+      }
+
       const tx = await contract.flip(selectedSide === "heads", {
         value: parseEther(betAmount),
-        gasLimit: estimatedGas.toNumber(),
       });
       await tx.wait();
 
-      // Retrieve the actual result from the contract
-      const [flipResult, userGuess] = await contract.getResult();
-      setResult(flipResult === userGuess ? "Heads" : "Tails");
-    } catch (error) {
-      console.error("Error flipping the coin", error);
+      const [flipResult] = await contract.getResult();
+      setResult(flipResult ? "Heads" : "Tails");
+      setError("");
+    } catch (err) {
+      console.error("Error flipping the coin", err);
+      setError("Failed to flip the coin. Check the console for details.");
     }
   };
 
@@ -111,9 +98,8 @@ const CoinFlip = ({ userAccount }) => {
       const tx = await contract.withdraw();
       await tx.wait();
       alert("Withdrawal successful!");
-      fetchContractBalance(); // Refresh contract balance after withdrawal
-    } catch (error) {
-      console.error("Error withdrawing earnings", error);
+    } catch (err) {
+      console.error("Error withdrawing earnings", err);
       alert("Withdrawal failed. Check the console for details.");
     }
   };
@@ -163,15 +149,15 @@ const CoinFlip = ({ userAccount }) => {
         Flip Coin
       </button>
 
-      {insufficientFunds && (
-        <p className="mt-4 text-xl text-red-500">
-          Insufficient funds in the contract. Please try again later.
-        </p>
-      )}
-
       {result && (
         <p className="mt-4 text-xl">
           Coin flip result: <span className="font-bold">{result}</span>!
+        </p>
+      )}
+
+      {error && (
+        <p className="mt-4 text-xl text-red-500">
+          <span class="font-bold">{error}</span>
         </p>
       )}
 
@@ -181,6 +167,13 @@ const CoinFlip = ({ userAccount }) => {
       >
         Withdraw Earnings
       </button>
+
+      {contractBalance !== null && (
+        <p className="mt-4 text-xl">
+          Contract balance:{" "}
+          <span className="font-bold">{contractBalance} ETH</span>
+        </p>
+      )}
     </div>
   );
 };
