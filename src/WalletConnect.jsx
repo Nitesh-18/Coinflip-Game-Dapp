@@ -20,15 +20,14 @@ const WalletConnect = ({ onConnect }) => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen bg-gray-900 text-white transition-all">
       {account ? (
-        <p className="text-green-500 bg-gray-800 p-2 rounded">
-          Connected: {account.substring(0, 6)}...
-          {account.substring(account.length - 4)}
+        <p className="text-green-400 text-lg font-semibold animate-pulse">
+          Connected: {account}
         </p>
       ) : (
         <button
-          className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 text-white font-bold py-2 px-6 rounded-full transition-all duration-300 transform hover:scale-105"
+          className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out"
           onClick={connectWallet}
         >
           Connect Wallet
