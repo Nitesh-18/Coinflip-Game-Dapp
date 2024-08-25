@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/coinflip-game/static/css/main.15c5b70b.css",
+    "main.js": "/coinflip-game/static/js/main.8b2e3ed5.js",
+    "static/js/453.faf9b58e.chunk.js": "/coinflip-game/static/js/453.faf9b58e.chunk.js",
+    "static/media/coin-flip.mp4": "/coinflip-game/static/media/coin-flip.3d6d41571c3a85fe28be.mp4",
+    "index.html": "/coinflip-game/index.html",
+    "main.15c5b70b.css.map": "/coinflip-game/static/css/main.15c5b70b.css.map",
+    "main.8b2e3ed5.js.map": "/coinflip-game/static/js/main.8b2e3ed5.js.map",
+    "453.faf9b58e.chunk.js.map": "/coinflip-game/static/js/453.faf9b58e.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.15c5b70b.css",
+    "static/js/main.8b2e3ed5.js"
+  ]
+}
