@@ -134,16 +134,18 @@ const CoinFlip = ({ userAccount }) => {
   };
 
   return (
-    <div className="flex flex-col items-center mt-8 text-white bg-gray-900 min-h-screen">
+    <div className="flex flex-col items-center justify-center h-screen text-white bg-gray-900">
       <h2 className="text-4xl font-bold mb-4 flex items-center">
         <span className="mr-4">Coin Flip Game</span>
-        <video
-          src={coinFlipVideo}
-          className="w-32 h-32 rounded-full border-4 border-white shadow-lg transform hover:scale-110 transition-transform duration-500"
-          autoPlay
-          loop
-          muted
-        ></video>
+        <div className="w-32 h-32 rounded-full overflow-hidden flex justify-center items-center border-4 border-white shadow-lg transform hover:scale-110 transition-transform duration-500">
+          <video
+            src={coinFlipVideo}
+            className="w-full h-full object-cover"
+            autoPlay
+            loop
+            muted
+          ></video>
+        </div>
       </h2>
 
       <button
