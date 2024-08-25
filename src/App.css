@@ -11,6 +11,7 @@ body {
   padding: 0; /* Remove default padding */
   height: 100%; /* Make sure the body and html elements cover the full height of the viewport */
   background-color: #111827; /* Ensure the background color of the whole page is consistent */
+  overflow: hidden;
 }
 
 #root {

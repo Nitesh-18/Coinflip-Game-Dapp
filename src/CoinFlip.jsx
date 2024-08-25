@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { BrowserProvider, Contract, parseEther, formatEther } from "ethers";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import coinFlipVideo from "./assets/coin-flip.mp4"; // Ensure the path is correct
+
 
 const CoinFlip = ({ userAccount }) => {
   const [betAmount, setBetAmount] = useState("");
@@ -137,7 +139,7 @@ const CoinFlip = ({ userAccount }) => {
       <h2 className="text-4xl font-bold mb-4 flex items-center">
         <span className="mr-4">Coin Flip Game</span>
         <video
-          src="./assets/coin-flip.mp4"
+          src= {coinFlipVideo}
           className="w-32 h-32"
           autoPlay
           loop
