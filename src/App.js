@@ -16,9 +16,6 @@ function App() {
         <WalletConnect onConnect={handleConnect} />
       ) : (
         <div>
-          <p className="text-center text-green-500 mt-4">
-            Connected: {userAccount}
-          </p>
           <CoinFlip userAccount={userAccount} />
         </div>
       )}
@@ -27,4 +24,3 @@ function App() {
 }
 
 export default App;
-

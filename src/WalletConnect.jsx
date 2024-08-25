@@ -12,7 +12,7 @@ const WalletConnect = ({ onConnect, onWalletConnected }) => {
         });
         setAccount(accounts[0]);
         onConnect(accounts[0]);
-        onWalletConnected(accounts[0]); // Trigger toast in CoinFlip
+        // onWalletConnected(accounts[0]); // Trigger toast in CoinFlip
       } catch (error) {
         console.error("Error connecting to MetaMask", error);
       }
