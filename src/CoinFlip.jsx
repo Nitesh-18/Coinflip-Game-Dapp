@@ -4,7 +4,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import coinFlipVideo from "./assets/coin-flip.mp4"; // Ensure the path is correct
 
-
 const CoinFlip = ({ userAccount }) => {
   const [betAmount, setBetAmount] = useState("");
   const [selectedSide, setSelectedSide] = useState("");
@@ -139,8 +138,8 @@ const CoinFlip = ({ userAccount }) => {
       <h2 className="text-4xl font-bold mb-4 flex items-center">
         <span className="mr-4">Coin Flip Game</span>
         <video
-          src= {coinFlipVideo}
-          className="w-32 h-32"
+          src={coinFlipVideo}
+          className="w-32 h-32 rounded-full border-4 border-white shadow-lg transform hover:scale-110 transition-transform duration-500"
           autoPlay
           loop
           muted
@@ -148,7 +147,7 @@ const CoinFlip = ({ userAccount }) => {
       </h2>
 
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded mb-4 transition-colors duration-300 transform hover:scale-105"
         onClick={initContract}
       >
         Initialize Contract
@@ -159,14 +158,14 @@ const CoinFlip = ({ userAccount }) => {
         placeholder="Enter bet amount (ETH)"
         value={betAmount}
         onChange={handleBetAmountChange}
-        className="border p-2 rounded mb-4 text-black"
+        className="border p-2 rounded mb-4 text-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
       />
 
       <div className="flex justify-center mb-4">
         <button
-          className={`mr-4 p-2 rounded ${
+          className={`mr-4 p-2 rounded transition-all duration-300 transform hover:scale-105 ${
             selectedSide === "heads"
-              ? "bg-blue-500 text-white"
+              ? "bg-blue-500 text-white shadow-lg"
               : "bg-gray-200 text-black"
           }`}
           onClick={() => handleSideChange("heads")}
@@ -174,9 +173,9 @@ const CoinFlip = ({ userAccount }) => {
           Heads
         </button>
         <button
-          className={`p-2 rounded ${
+          className={`p-2 rounded transition-all duration-300 transform hover:scale-105 ${
             selectedSide === "tails"
-              ? "bg-blue-500 text-white"
+              ? "bg-blue-500 text-white shadow-lg"
               : "bg-gray-200 text-black"
           }`}
           onClick={() => handleSideChange("tails")}
@@ -187,26 +186,26 @@ const CoinFlip = ({ userAccount }) => {
 
       <button
         onClick={flipCoin}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-8 rounded transition-colors duration-300 transform hover:scale-105"
       >
         Flip Coin
       </button>
 
       {result && (
-        <p className="mt-4 text-xl">
+        <p className="mt-4 text-xl transform transition-opacity duration-500 ease-in-out">
           Coin flip result: <span className="font-bold">{result}</span>!
         </p>
       )}
 
       {error && (
-        <p className="mt-4 text-xl text-red-500">
+        <p className="mt-4 text-xl text-red-500 transform transition-opacity duration-500 ease-in-out">
           <span className="font-bold">{error}</span>
         </p>
       )}
 
       <button
         onClick={withdrawEarnings}
-        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-4"
+        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-8 rounded mt-4 transition-colors duration-300 transform hover:scale-105"
       >
         Withdraw Earnings
       </button>
@@ -219,7 +218,7 @@ const CoinFlip = ({ userAccount }) => {
       )}
 
       {connectedAccount && (
-        <p className="mt-4 text-lg bg-gray-800 text-white p-2 rounded">
+        <p className="mt-4 text-lg bg-gray-800 text-white p-2 rounded transition-transform duration-300 transform hover:scale-105">
           Connected: <span className="font-bold">{connectedAccount}</span>
         </p>
       )}
