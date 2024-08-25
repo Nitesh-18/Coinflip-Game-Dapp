@@ -115,7 +115,7 @@ const CoinFlip = ({ userAccount }) => {
 
   // Function to show toast notification
   const notify = (account) => {
-    toast.success(`Wallet Connected: ${account}`, {
+    toast.success(`Wallet Connected`, {
       position: "top-right",
       autoClose: 3000, // 3 seconds
     });
