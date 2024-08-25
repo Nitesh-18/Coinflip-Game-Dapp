@@ -1,16 +1,20 @@
 .App {
   text-align: center;
+  margin: 0; /* Ensure there's no margin */
+  padding: 0; /* Ensure there's no padding */
+  background-color: #282c34; /* Ensure the background color covers the entire app */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+html,
+body {
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  height: 100%; /* Make sure the body and html elements cover the full height of the viewport */
+  background-color: #111827; /* Ensure the background color of the whole page is consistent */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+#root {
+  height: 100%; /* Make sure the root div covers the full height of the page */
 }
 
 .App-header {
